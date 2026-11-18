@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<title>ART JGL Construcciones</title>
+<style>
+:root{--gold:#FDB225;--gold-d:#E09A0B;--ink:#111;--paper:#fff;--bg:#F4F1EA;--line:#111;--mut:#5b5b5b;--ok:#1E7B34;--bad:#C0392B}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.35}
+body{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+header.top{background:var(--ink);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20;border-bottom:4px solid var(--gold)}
+header.top img{width:44px;height:auto;display:block}
+header.top .t{flex:1;min-width:0}
+header.top .t b{display:block;font-size:15px;letter-spacing:.4px;text-transform:uppercase}
+header.top .t span{font-size:13px;color:#cfcfcf}
+header.top button{background:none;border:2px solid var(--gold);color:var(--gold);font-weight:700;padding:8px 12px;font-size:14px}
+header.top[hidden],.prog[hidden]{display:none}
+header.top img{background:#fff;padding:2px}
+.hero img{background:#fff;padding:6px}
+.gh b{flex:1;min-width:0}.gh span{flex:none;white-space:nowrap}
+.prog{height:8px;background:#ddd}.prog i{display:block;height:100%;background:var(--gold);width:0;transition:width .25s}
+main{max-width:720px;margin:0 auto;padding:14px}
+h2{margin:6px 0 4px;font-size:22px;text-transform:uppercase;letter-spacing:.3px}
+p.sub{margin:0 0 14px;color:var(--mut)}
+.card{background:var(--paper);border:2px solid var(--line);padding:12px;margin:0 0 12px}
+label.f{display:block;font-weight:700;margin:0 0 4px;font-size:15px}
+input[type=text],input[type=time],textarea,select{width:100%;font:inherit;padding:13px;border:2px solid var(--line);background:#fff;border-radius:0}
+textarea{min-height:96px;resize:vertical}
+.row{margin-bottom:12px}
+.ro{background:#eee;border:2px solid var(--line);padding:13px;font-weight:700}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sel{background:#fff;border:2px solid var(--line);padding:8px 6px 10px;text-align:center;font:inherit;font-weight:700;font-size:14px;position:relative;min-height:128px;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;color:var(--ink)}
+.sel svg{width:62px;height:62px}
+.sel.on{background:var(--gold);box-shadow:inset 0 0 0 3px var(--ink)}
+.sel.on::after{content:"✓";position:absolute;top:4px;right:6px;font-size:20px;font-weight:900}
+.gh{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:14px 0 8px}
+.gh b{text-transform:uppercase;font-size:14px;letter-spacing:.4px}
+.mini{background:#fff;border:2px solid var(--line);padding:8px 12px;font:inherit;font-weight:700;font-size:14px;color:var(--ink)}
+.mini.k{background:var(--ink);color:var(--gold)}
+.big{width:100%;min-height:58px;font:inherit;font-weight:800;font-size:18px;text-transform:uppercase;letter-spacing:.4px;border:2px solid var(--line);background:var(--gold);color:var(--ink);padding:12px}
+.big.d{background:var(--ink);color:#fff}.big.w{background:#fff}
+.note{background:#FFF4D1;border:2px solid var(--gold-d);padding:10px;margin:0 0 12px;font-size:15px}
+.err{background:#fde8e6;border:2px solid var(--bad);color:#7a1a10;padding:10px;margin:0 0 12px;font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
+.chip{border:1.5px solid var(--line);padding:3px 8px;font-size:13px;background:#fff;font-weight:600}
+.chip.g{background:var(--gold)}
+.src{border:2px solid var(--line);margin:0 0 14px;background:#fff}
+.src>.hd{display:flex;align-items:center;gap:10px;background:var(--ink);color:#fff;padding:8px 10px}
+.src>.hd svg{width:44px;height:44px;background:#fff;flex:none}
+.src>.hd b{flex:1;font-size:15px;text-transform:uppercase}
+.src>.bd{padding:10px}
+.ctl{display:flex;gap:10px;align-items:flex-start;padding:11px 8px;border-bottom:1px solid #ccc;cursor:pointer;user-select:none}
+.ctl:last-of-type{border-bottom:0}
+.box{flex:none;width:30px;height:30px;border:2.5px solid var(--ink);background:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;line-height:1}
+.ctl.on .box,.pick.on .box{background:var(--gold)}
+.ctl.on .box::after,.pick.on .box::after{content:"✓"}
+.ctl.miss{background:#fde8e6}
+.pick{display:flex;gap:12px;align-items:center;padding:14px 10px;border:2px solid var(--line);background:#fff;margin:0 0 8px;cursor:pointer;user-select:none}
+.pick .nm{flex:1;font-weight:700}.pick .sm{font-size:13px;color:var(--mut);font-weight:400;display:block}
+.pick.miss{background:#fde8e6}
+.addrow{display:flex;gap:8px;margin-top:10px}.addrow input{flex:1}
+.addrow button{flex:none}
+.photos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ph{position:relative;border:2px solid var(--line);background:#fff}.ph img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover}
+.ph button{position:absolute;top:4px;right:4px;width:38px;height:38px;border:2px solid var(--ink);background:var(--gold);font-weight:900;font-size:18px}
+.sg{display:flex;align-items:center;gap:10px;border:2px solid var(--line);background:#fff;padding:10px;margin:0 0 8px}
+.sg .nm{flex:1;font-weight:700}.sg .sm{font-size:13px;color:var(--mut);display:block;font-weight:400}
+.sg img{height:44px;width:auto;border:1px solid #bbb;background:#fff}
+.st{font-weight:800;font-size:14px}.st.ok{color:var(--ok)}.st.no{color:var(--bad)}
+nav.bar{position:fixed;left:0;right:0;bottom:0;background:var(--ink);border-top:4px solid var(--gold);padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:flex;gap:10px;z-index:30}
+nav.bar button{flex:1;min-height:56px;font:inherit;font-weight:800;font-size:17px;text-transform:uppercase;border:2px solid var(--gold);background:var(--gold);color:var(--ink)}
+nav.bar button.sec{background:var(--ink);color:var(--gold);flex:.6}
+nav.bar[hidden]{display:none}
+.ovl{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;display:flex;align-items:center;justify-content:center;padding:14px}
+.ovl[hidden]{display:none}
+.dlg{background:#fff;border:3px solid var(--gold);width:100%;max-width:680px;padding:14px}
+.dlg h3{margin:0 0 4px;text-transform:uppercase}
+canvas.pad{width:100%;height:230px;border:2px solid var(--ink);background:#fff;touch-action:none;display:block}
+.dlg .acts{display:flex;gap:8px;margin-top:10px}.dlg .acts button{flex:1;min-height:52px;font:inherit;font-weight:800;border:2px solid var(--ink);background:#fff;text-transform:uppercase}
+.dlg .acts .k{background:var(--gold)}
+.toast{position:fixed;left:12px;right:12px;bottom:calc(100px + env(safe-area-inset-bottom));background:var(--ink);color:#fff;border-left:6px solid var(--gold);padding:12px;z-index:60;font-weight:700}
+.toast[hidden]{display:none}
+.hist{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #ccc;font-size:15px}
+.hist a{color:var(--ink);font-weight:800}
+.sum dt{font-weight:800;font-size:13px;text-transform:uppercase;color:var(--mut);margin-top:8px}.sum dd{margin:0 0 2px}
+.hero{background:var(--ink);color:#fff;padding:22px 16px;text-align:center;border-bottom:6px solid var(--gold);margin:-14px -14px 14px}
+.hero img{width:120px;height:auto;display:block;margin:0 auto 10px}
+.hero h1{margin:0;font-size:24px;text-transform:uppercase;letter-spacing:.5px}
+.hero p{margin:4px 0 0;color:#cfcfcf}
+.spin{width:46px;height:46px;border:6px solid #ddd;border-top-color:var(--gold);border-radius:50%;animation:sp 1s linear infinite;margin:6px auto 10px}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<header class="top" id="top" hidden>
+  <img src="logo.png" alt="JGL Construcciones">
+  <div class="t"><b id="tTitle">ART</b><span id="tSub"></span></div>
+  <button id="btnHome" type="button">Inicio</button>
+</header>
+<div class="prog" id="prog" hidden><i id="progBar"></i></div>
+<main id="view"></main>
+<nav class="bar" id="nav" hidden>
+  <button class="sec" id="bBack" type="button">Atrás</button>
+  <button id="bNext" type="button">Siguiente</button>
+</nav>
+<div class="ovl" id="ovl" hidden></div>
+<div class="toast" id="toast" hidden></div>
+
+<script src="jspdf.umd.min.js"></script>
+<script>
+/* ========================= CONFIGURACIÓN ========================= */
+const CONFIG = {
+  empresa: "Constructora JGL SpA",
+  marca: "JGL Construcciones",
+  rut: "77.889.568-4",
+  jefeDefault: "Gamaliel Cáceres",
+  endpoint: "",                  // URL de la aplicación web de Apps Script (guarda el PDF en el Drive)
+  token: "",                     // clave compartida con el Apps Script
+  nomina: [                      // Fuente: planilla "Formulario de Inscripcion CONSTRUCTORA JGL SPA (Respuestas)"
+    {id:"jgl1",nombre:"Gamaliel Dagoberto Cáceres Hernández",rut:"16.981.491-0",cargo:"Supervisor"},
+    {id:"jgl2",nombre:"Juan Guillermo Lillo Otarola",rut:"10.377.626-0",cargo:"Jefe de Obra"},
+    {id:"jgl3",nombre:"John Alejandro Cifuentes Salamanca",rut:"18.101.863-1",cargo:"Maestro"},
+    {id:"jgl4",nombre:"Roberto Andrés Saez Saez",rut:"18.480.218-K",cargo:"Maestro"},
+    {id:"jgl5",nombre:"Brayan Francisco Saez Saez",rut:"17.217.635-6",cargo:"Maestro"},
+    {id:"jgl6",nombre:"Martin Olate",rut:"13.843.705-1",cargo:"Maestro"}
+  ],
+  credito: "Creado por Daniel Zunino · Integra Prevención SpA"
+};
+/* ================================================================== */
+
+const GOLD = "#FDB225";
+
+/* ---------- Monitos (pictogramas) ---------- */
+const MAN = `<path d="M17.5 38v16M24.5 38v16" stroke="#111" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M17.5 38v16M24.5 38v16" stroke="#FDB225" stroke-width="4.4" stroke-linecap="round" fill="none"/><rect x="14.3" y="53" width="6.4" height="4.5" rx="1" fill="#111"/><rect x="21.3" y="53" width="6.4" height="4.5" rx="1" fill="#111"/><rect x="13" y="21" width="16" height="19" rx="3" fill="#FDB225" stroke="#111" stroke-width="1.6"/><path d="M13 30h16M13 34h16" stroke="#fff" stroke-width="1.6"/><path d="M28 24l9 7" stroke="#111" stroke-width="5.4" stroke-linecap="round"/><path d="M28 24l9 7" stroke="#FDB225" stroke-width="3.2" stroke-linecap="round"/><circle cx="37.5" cy="31.2" r="2.4" fill="#F1C9A0" stroke="#111" stroke-width="1"/><circle cx="21" cy="14.5" r="5.4" fill="#F1C9A0" stroke="#111" stroke-width="1.4"/><path d="M14.4 13.6a6.6 6.6 0 0 1 13.2 0z" fill="#FDB225" stroke="#111" stroke-width="1.4"/><rect x="13" y="13" width="16" height="2.2" rx="1" fill="#FDB225" stroke="#111" stroke-width="1.2"/>`;
+const S1 = 'stroke="#111" stroke-width="1.4"';
+const ACC = {
+  esmeril:`<rect x="38" y="28" width="12" height="6" rx="2" fill="#777" ${S1}/><circle cx="53" cy="31" r="7" fill="#e6e6e6" ${S1}/><circle cx="53" cy="31" r="1.6" fill="#111"/><path d="M58.5 25l4-3M60 31h4M58.5 37l4 3" stroke="#F26B1D" stroke-width="1.8" stroke-linecap="round"/>`,
+  soldadora:`<rect x="24" y="9" width="6.5" height="10" rx="1.2" fill="#222" ${S1}/><rect x="26.2" y="12" width="3" height="3" fill="#7fd0ff"/><path d="M38 31l13 9" stroke="#111" stroke-width="2.2" stroke-linecap="round"/><path d="M52 41l-3-6M52 41l6-3M52 41l3 6M52 41l-6 3" stroke="#F26B1D" stroke-width="1.8" stroke-linecap="round"/><circle cx="52" cy="41" r="2.4" fill="#FFE27A"/><rect x="42" y="47" width="16" height="10" fill="#C0392B" ${S1}/><path d="M44 50h6" stroke="#fff" stroke-width="1.4"/>`,
+  oxicorte:`<rect x="52" y="22" width="8" height="30" rx="3" fill="#C0392B" ${S1}/><rect x="54" y="17" width="4" height="6" fill="#777" ${S1}/><path d="M56 17c-4-7-16-3-16 9" fill="none" stroke="#111" stroke-width="1.6"/><path d="M38 31l9 3" stroke="#111" stroke-width="2.6" stroke-linecap="round"/><path d="M47 33.5l6 1.5-6 2.5z" fill="#F26B1D"/>`,
+  taladro:`<rect x="37" y="26" width="12" height="8" rx="2" fill="#1C6FB5" ${S1}/><rect x="42" y="33" width="4.5" height="10" fill="#1C6FB5" ${S1}/><path d="M49 30h9" stroke="#111" stroke-width="2.2"/><path d="M60 26v8M62.6 28v4" stroke="#F26B1D" stroke-width="1.8" stroke-linecap="round"/><rect x="56" y="38" width="7" height="18" fill="#bbb" ${S1}/>`,
+  sierra:`<path d="M38 31h6v-5h8" fill="none" stroke="#111" stroke-width="2.6"/><circle cx="50" cy="38" r="7" fill="#e6e6e6" ${S1}/><circle cx="50" cy="38" r="7" fill="none" stroke="#111" stroke-width="2.4" stroke-dasharray="2 1.6"/><rect x="36" y="46" width="27" height="7" fill="#C89B5E" ${S1}/>`,
+  andamio:`<g stroke="#111" stroke-width="1.6" fill="none"><path d="M40 6v52M62 6v52M40 18h22M40 32h22M40 46h22M40 18l22 14M40 32l22 14"/></g><rect x="38" y="30" width="26" height="3.2" fill="#C89B5E" ${S1}/><rect x="38" y="56" width="26" height="2.5" fill="#777"/>`,
+  escala:`<path d="M43 58l6-50M56 58l6-50" stroke="#111" stroke-width="2.2" fill="none"/><path d="M44.2 50h12M45.8 40h12M47.4 30h12M49 20h12" stroke="#111" stroke-width="1.7"/>`,
+  pluma:`<rect x="32" y="44" width="31" height="8" fill="#FDB225" ${S1}/><rect x="53" y="35" width="10" height="10" fill="#FDB225" ${S1}/><rect x="55" y="37" width="5" height="4" fill="#7fd0ff"/><circle cx="39" cy="54" r="4" fill="#333" ${S1}/><circle cx="56" cy="54" r="4" fill="#333" ${S1}/><path d="M38 44L52 9" stroke="#111" stroke-width="3" stroke-linecap="round"/><path d="M52 9v14" stroke="#111" stroke-width="1.4"/><path d="M49.5 23a2.5 2.5 0 1 0 5 0" fill="none" stroke="#111" stroke-width="1.6"/><rect x="47" y="27" width="10" height="7" fill="#999" ${S1}/>`,
+  alza:`<rect x="36" y="51" width="26" height="5" fill="#FDB225" ${S1}/><circle cx="41" cy="58" r="3" fill="#333"/><circle cx="57" cy="58" r="3" fill="#333"/><path d="M40 51l16-16M56 51L40 35M40 35l16-16M56 35L40 19" stroke="#111" stroke-width="1.8"/><path d="M38 18v-6M62 18v-6M38 12h24" stroke="#111" stroke-width="1.6" fill="none"/><rect x="38" y="17" width="24" height="3.4" fill="#FDB225" ${S1}/>`,
+  betonera:`<path d="M40 20l17 5-3 19H43z" fill="#FDB225" ${S1}/><path d="M44 28h11M43.5 34h10.5" stroke="#111" stroke-width="1.2"/><path d="M42 44l-5 13M55 44l5 13" stroke="#111" stroke-width="2.4" stroke-linecap="round"/><path d="M47 14c4-3 9-1 10 3" fill="none" stroke="#111" stroke-width="1.6"/><path d="M57 17l1-4 3 3z" fill="#111"/>`,
+  retro:`<rect x="32" y="49" width="31" height="8" rx="4" fill="#333" ${S1}/><rect x="36" y="37" width="17" height="12" fill="#FDB225" ${S1}/><rect x="38" y="39" width="6" height="5" fill="#7fd0ff"/><path d="M53 41l7-14 3 10" fill="none" stroke="#111" stroke-width="3" stroke-linejoin="round"/><path d="M58 38l6 2-2 7z" fill="#777" ${S1}/>`,
+  manuales:`<path d="M38 28l17 27" stroke="#8B5A2B" stroke-width="3.2" stroke-linecap="round"/><path d="M52 53l8 2-3 7-7-4z" fill="#999" ${S1}/><path d="M46 14l12 6" stroke="#8B5A2B" stroke-width="3" stroke-linecap="round"/><rect x="44" y="10" width="8" height="7" transform="rotate(25 48 13)" fill="#777" ${S1}/>`,
+  electrico:`<rect x="38" y="36" width="24" height="17" fill="#C0392B" ${S1}/><path d="M51 38l-6 8h5l-3 7 9-10h-5z" fill="#FFE27A" ${S1}/><path d="M38 44c-5 0-5 8-9 8" fill="none" stroke="#111" stroke-width="1.6"/>`,
+  /* tipos de trabajo */
+  t_altura:`<g stroke="#111" stroke-width="1.5" fill="none"><path d="M42 8v50M62 8v50M42 22h20M42 36h20M42 50h20M42 22l20 14M42 36l20 14"/></g><path d="M29 24L42 12" stroke="#C0392B" stroke-width="1.8" stroke-dasharray="3 2"/><path d="M52 4l4 6h-8z" fill="#FDB225" ${S1}/>`,
+  t_caliente:`<rect x="24" y="9" width="6.5" height="10" rx="1.2" fill="#222" ${S1}/><path d="M52 57c-9-4-10-13-4-20 1 4 3 5 5 6-1-7 2-11 5-14 1 9 8 11 4 19-2 5-7 8-10 9z" fill="#F26B1D" ${S1}/><path d="M53 55c-4-2-5-6-2-10 1 2 2 3 3 3 0-3 1-5 3-6 0 5 4 6 2 10-1 2-3 3-6 3z" fill="#FFE27A"/>`,
+  t_confinado:`<ellipse cx="50" cy="55" rx="12" ry="4" fill="#333" ${S1}/><path d="M38 55V43h24v12" fill="#999" ${S1}/><ellipse cx="50" cy="43" rx="12" ry="4" fill="#555" ${S1}/><path d="M50 8l11 19H39z" fill="#FDB225" ${S1}/><rect x="49" y="14" width="2" height="7" fill="#111"/><circle cx="50" cy="24" r="1.3" fill="#111"/>`,
+  t_excav:`<path d="M30 46h9l4 11h14l4-11h9v14H30z" fill="#8B5A2B" ${S1}/><path d="M43 46l3 11M61 46l-3 11" stroke="#111" stroke-width="1.2"/><path d="M30 46h34" stroke="#111" stroke-width="2"/><path d="M56 40l6-8 2 8z" fill="#8B5A2B" ${S1}/>`,
+  t_electrico:`<path d="M50 6v52M40 14h20M42 23h16" stroke="#111" stroke-width="2.6"/><path d="M30 20c6 5 10 5 12 3M58 23c3 3 6 3 6 3" fill="none" stroke="#111" stroke-width="1.2"/><path d="M58 32l-7 10h5l-3 9 11-12h-6z" fill="#FFE27A" ${S1}/>`,
+  t_izaje:`<path d="M50 3v22" stroke="#111" stroke-width="2"/><path d="M45.5 25a4.5 4.5 0 1 0 9 0" fill="none" stroke="#111" stroke-width="2.2"/><path d="M43 36l7-10 7 10" fill="none" stroke="#111" stroke-width="1.6"/><rect x="40" y="36" width="20" height="15" fill="#999" ${S1}/>`,
+  t_hormigon:`<path d="M37 34h24l-4 14H41z" fill="#888" ${S1}/><path d="M41 34l-3-5M61 34l4-4" stroke="#111" stroke-width="1.6"/><circle cx="49" cy="54" r="4.2" fill="#333" ${S1}/><path d="M44 28c1-4 5-4 6-1M52 26c1-3 4-3 5 0" fill="none" stroke="#999" stroke-width="2"/>`,
+  t_albanil:`<g fill="#C0582B" stroke="#111" stroke-width="1.2"><rect x="38" y="48" width="12" height="6"/><rect x="50" y="48" width="12" height="6"/><rect x="32" y="42" width="12" height="6"/><rect x="44" y="42" width="12" height="6"/><rect x="38" y="36" width="12" height="6"/><rect x="50" y="36" width="12" height="6"/></g><path d="M38 31l10-5" stroke="#111" stroke-width="2"/><path d="M47 24l7 4-3 4z" fill="#999" ${S1}/>`,
+  t_montaje:`<path d="M38 57V14M62 57V14M38 14h24" stroke="#555" stroke-width="3.4" fill="none"/><path d="M38 14l24 14M38 28l24 14M38 42l24 14" stroke="#555" stroke-width="1.8"/><circle cx="38" cy="14" r="2.4" fill="#FDB225" ${S1}/><circle cx="62" cy="14" r="2.4" fill="#FDB225" ${S1}/>`
+};
+const svg = (acc, px) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="${px||64}" height="${px||64}">${MAN}${acc}</svg>`;
+
+/* ---------- Catálogo (basado en los PTS JGL 01 al 09 de Constructora JGL SpA, 17-11-2026) ---------- */
+const PTS = {
+  "01":"PTS JGL 01 · Trabajo en altura: andamios, escalas, alza hombre y estructuras",
+  "02":"PTS JGL 02 · Izaje y montaje de elementos con camión pluma",
+  "03":"PTS JGL 03 · Trabajos en caliente: soldadura al arco y oxicorte",
+  "04":"PTS JGL 04 · Corte y desbaste con esmeril angular",
+  "05":"PTS JGL 05 · Excavaciones y zanjas para fundaciones",
+  "06":"PTS JGL 06 · Moldaje, enfierradura y vaciado de hormigón",
+  "07":"PTS JGL 07 · Trabajo cerca de líneas eléctricas y tableros provisorios",
+  "08":"PTS JGL 08 · Operación de retroexcavadora y conducción de vehículos",
+  "09":"PTS JGL 09 · Manejo manual de cargas, herramientas manuales y orden en obra"
+};
+const TR = {
+  altura:{n:"Trabajo en altura",ico:"t_altura",proc:PTS["01"],permiso:"Permiso de trabajo en altura",
+    riesgos:["Caída a distinto nivel / de altura","Caída por colapso de la superficie","Golpes por caída de objetos","Pérdida de equilibrio por viento","Caída o volcamiento de la canasta"],
+    ctl:["Andamio armado por personal competente, base nivelada y firme, revisado con lista de chequeo","Plataformas completas, barandas superior e intermedia y rodapiés instalados","Escalas sin daños, con apoyo firme y antideslizante","Arnés revisado (costuras, hebillas, colas y absorbedor sin daños)","Líneas de vida o puntos de anclaje resistentes instalados antes de subir","Área inferior delimitada y señalizada","Clima apto: sin viento fuerte, lluvia ni tormenta eléctrica"],
+    epp:["Arnés de cuerpo completo con doble cola y absorbedor de impacto","Casco con barbiquejo","Calzado de seguridad antideslizante","Lentes de seguridad","Bloqueador solar y legionario"]},
+  izaje:{n:"Izaje con camión pluma",ico:"t_izaje",proc:PTS["02"],permiso:"",
+    riesgos:["Golpes / aplastamiento","Volcamiento del equipo","Contacto eléctrico / electrocución","Atrapamientos / golpes","Caída de la carga"],
+    ctl:["Operador autorizado por escrito, con licencia vigente y capacitado","Camión revisado: frenos, estabilizadores, comandos, alarma, ganchos con traba, tabla de capacidades visible","Eslingas y estrobos en buen estado, con capacidad identificada","Peso de la carga y radio de trabajo conocidos y dentro de la tabla de capacidades","Terreno firme y nivelado; estabilizadores totalmente extendidos sobre placas o tacos","Líneas eléctricas ubicadas y distancia de seguridad asegurada","Área de izaje delimitada y un solo señalero designado","Clima apto: sin viento fuerte ni tormenta eléctrica"],
+    epp:["Guantes de cuero","Chaleco reflectante","Lentes de seguridad"]},
+  caliente:{n:"Trabajos en caliente (soldadura, oxicorte)",ico:"t_caliente",proc:PTS["03"],permiso:"Permiso de trabajo en caliente",
+    riesgos:["Lesiones oculares / quemaduras","Quemaduras / incendio","Intoxicación por humos metálicos","Electrocución","Incendio / explosión","Golpes por caída de cilindros"],
+    ctl:["Materiales combustibles retirados del área (mínimo 10 m) o cubiertos con mantas ignífugas","Extintor operativo a mano y un vigía designado","Ventilación natural o extracción localizada suficiente","Cables, portaelectrodo y conexión a tierra sin daños","Mangueras, reguladores y uniones revisados con agua jabonosa","Válvulas antirretorno de llama instaladas","Cilindros verticales, encadenados y en carro portacilindros"],
+    epp:["Careta de soldar con filtro adecuado","Delantal, mangas y guantes de cuero","Ropa de algodón (nunca sintética)","Mascarilla con filtro para humos","Lentes de seguridad bajo la careta","Protección auditiva si corresponde"]},
+  excav:{n:"Excavaciones y zanjas",ico:"t_excav",proc:PTS["05"],permiso:"",
+    riesgos:["Atrapamiento / sepultamiento","Caída a distinto nivel","Electrocución / incendio / inundación","Lesiones musculoesqueléticas","Golpes / aplastamiento"],
+    ctl:["Redes subterráneas ubicadas y señalizadas antes de excavar","Tipo de suelo evaluado; talud o entibado definido","Perímetro delimitado con baranda o cinta, y accesos con escala asegurada","Tierra y materiales acopiados lejos del borde (mínimo 1 metro)","Excavación revisada por el supervisor antes de cada ingreso","Equipos y vehículos mantenidos a distancia del borde"],
+    epp:["Chaleco reflectante","Lentes de seguridad","Bloqueador solar y legionario"]},
+  hormigon:{n:"Moldaje, enfierradura y hormigón",ico:"t_hormigon",proc:PTS["06"],permiso:"",
+    riesgos:["Cortes / empalamiento","Lesiones por sobreesfuerzo","Cortes / atrapamientos","Dermatitis / quemaduras químicas en la piel","Electrocución","Hipoacusia / vibración"],
+    ctl:["Puntas de fierro con capuchones y armaduras señalizadas","Tablero con protección diferencial y cables en buen estado","Moldajes revisados y bien apuntalados","Pasarelas habilitadas sobre las armaduras","Área de trabajo ordenada y sin materiales en el suelo"],
+    epp:["Botas de goma para el vaciado","Ropa de manga larga","Antiparras","Protección auditiva"]},
+  electrico:{n:"Cerca de líneas y tableros eléctricos",ico:"t_electrico",proc:PTS["07"],permiso:"",
+    riesgos:["Contacto eléctrico / electrocución","Electrocución por tableros y alargadores en mal estado","Electrocución / incendio por equipos dañados"],
+    ctl:["Líneas aéreas identificadas en el reconocimiento previo del terreno","Distancia de seguridad confirmada con la empresa distribuidora o línea desenergizada","Franja bajo las líneas delimitada y señalizada","Tableros con protección diferencial, puesta a tierra, cerrados y protegidos de la lluvia","Alargadores completos, sin empalmes con cinta y con enchufes industriales"],
+    epp:["Calzado de seguridad dieléctrico","Lentes de seguridad"]},
+  albanil:{n:"Albañilería, cargas y orden en obra",ico:"t_albanil",proc:PTS["09"],permiso:"",
+    riesgos:["Lesiones musculoesqueléticas","Golpes por estructuras o herramientas","Caídas al mismo nivel","Cortes / golpes en manos y dedos","Atrapamientos de manos y dedos"],
+    ctl:["Ruta de traslado despejada y sin desniveles","Carros, aparejos o ayuda mecánica disponibles para cargas pesadas","Herramientas manuales revisadas, sin mangos rotos ni filos dañados","Pasillos y accesos libres de materiales y cables"],
+    epp:["Lentes de seguridad","Ropa de trabajo ajustada"]},
+  montaje:{n:"Montaje de estructuras y galpones",ico:"t_montaje",proc:"",permiso:"",imp:["altura"],riesgos:[],ctl:[],epp:[]},
+  confinado:{n:"Espacio confinado",ico:"t_confinado",proc:"",permiso:"Permiso de ingreso a espacio confinado",sinProc:true,
+    riesgos:["Atmósfera deficiente en oxígeno o tóxica","Asfixia","Atrapamiento","Dificultad de rescate"],
+    ctl:["Medición de gases (oxígeno, inflamables y tóxicos) antes de ingresar y durante el trabajo","Ventilación forzada instalada","Vigía permanente en el exterior con comunicación continua","Plan y equipo de rescate disponible en el lugar","Energías peligrosas aisladas y bloqueadas","Personal que ingresa informado y autorizado"],
+    epp:["Arnés con línea de rescate","Detector de gases personal","Respirador según evaluación"]}
+};
+const EQ = {
+  esmeril:{n:"Esmeril angular",g:"Corte y soldadura",imp:[],proc:PTS["04"],
+    riesgos:["Lesiones oculares / golpes","Rotura del disco / cortes graves","Cortes / atrapamiento de manos","Hipoacusia / vibración mano-brazo","Electrocución"],
+    ctl:["Guarda de protección instalada y en buen estado","Disco sin grietas ni desgaste, apto para el tipo de trabajo","Revoluciones máximas del disco iguales o superiores a las de la máquina","Mango lateral instalado","Cable, enchufe e interruptor sin daños","Pieza firmemente sujeta; área despejada de combustibles"],
+    epp:["Antiparras y careta facial","Protección auditiva","Mascarilla para polvo y partículas","Ropa ajustada"]},
+  soldadora:{n:"Soldadora",g:"Corte y soldadura",imp:["caliente"],riesgos:[],ctl:[],epp:[]},
+  oxicorte:{n:"Equipo de oxicorte",g:"Corte y soldadura",imp:["caliente"],riesgos:[],ctl:[],epp:[]},
+  taladro:{n:"Taladro y rotomartillo",g:"Herramientas eléctricas y manuales",imp:[],riesgos:[],ctl:[],epp:[]},
+  sierra:{n:"Sierra circular",g:"Herramientas eléctricas y manuales",imp:[],riesgos:[],ctl:[],epp:[]},
+  electrico:{n:"Extensiones y tableros provisorios",g:"Herramientas eléctricas y manuales",imp:["electrico"],riesgos:[],ctl:[],epp:[]},
+  manuales:{n:"Herramientas manuales (palas, picotas, martillos)",g:"Herramientas eléctricas y manuales",imp:["albanil"],riesgos:[],ctl:[],epp:[]},
+  andamio:{n:"Andamio",g:"Acceso en altura",imp:["altura"],riesgos:[],ctl:[],epp:[]},
+  escala:{n:"Escala",g:"Acceso en altura",imp:["altura"],riesgos:[],ctl:[],epp:[]},
+  alza:{n:"Alza hombre / plataforma elevadora",g:"Acceso en altura",imp:["altura"],riesgos:[],ctl:[],epp:[]},
+  pluma:{n:"Camión pluma",g:"Maquinaria y vehículos",imp:["izaje"],riesgos:[],ctl:[],epp:[]},
+  betonera:{n:"Betonera y vibrador",g:"Maquinaria y vehículos",imp:["hormigon"],riesgos:[],ctl:[],epp:[]},
+  retro:{n:"Retroexcavadora, camioneta y camión",g:"Maquinaria y vehículos",imp:[],proc:PTS["08"],
+    riesgos:["Atropello / golpes","Accidente con maquinaria","Volcamiento del equipo","Atrapamiento / aplastamiento","Accidente de tránsito","Caída de carga / golpes"],
+    ctl:["Operador autorizado por escrito, con licencia vigente y capacitado","Revisión diaria: frenos, luces, bocina, alarma de retroceso, neumáticos u orugas, fugas, espejos y cinturón","Extintor y botiquín en el equipo o vehículo","Radio de giro delimitado y señalero designado","Terreno firme; distancia al borde de excavaciones asegurada","Carga amarrada y asegurada antes de partir"],
+    epp:["Chaleco reflectante","Protección auditiva","Cinturón de seguridad (obligatorio)"]}
+};
+const EPP_BASE = ["Casco de seguridad","Calzado de seguridad","Guantes de trabajo"];
+const GRUPOS = ["Corte y soldadura","Herramientas eléctricas y manuales","Acceso en altura","Maquinaria y vehículos"];
+const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+/* ---------- Utilidades ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const LS = {
+  get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+const pad2 = n => String(n).padStart(2,"0");
+const fechaISO = d => d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());
+const fechaCL = d => pad2(d.getDate())+"-"+pad2(d.getMonth()+1)+"-"+d.getFullYear();
+const fechaLarga = d => d.getDate()+" de "+MESES[d.getMonth()].toLowerCase()+" de "+d.getFullYear();
+function toast(msg,ms){const t=$("#toast");t.textContent=msg;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,ms||2600)}
+function rutLimpio(r){return String(r||"").replace(/[^0-9kK]/g,"").toUpperCase()}
+function rutOk(r){const c=rutLimpio(r);if(c.length<8||c.length>9)return false;const cu=c.slice(0,-1),dv=c.slice(-1);let s=0,m=2;for(let i=cu.length-1;i>=0;i--){s+=+cu[i]*m;m=m===7?2:m+1}const e=11-(s%11);const x=e===11?"0":e===10?"K":String(e);return x===dv}
+function rutFmt(r){const c=rutLimpio(r);if(c.length<2)return c;return c.slice(0,-1).replace(/\B(?=(\d{3})+(?!\d))/g,".")+"-"+c.slice(-1)}
+
+/* ---------- Estado ---------- */
+let D = null;           // ART en curso
+let step = 0;           // 0 inicio, 1..8 pasos, 9 listo
+let hechoInfo = null;   // resultado de la generación
+const STEPS = ["Datos","Trabajos","Equipos","Trabajadores","Riesgos y medidas","Fotos","Firmas","Revisar y generar"];
+
+function nuevoART(){
+  const now=new Date();
+  const ult=LS.get("art_ult",{});
+  D={fecha:fechaISO(now),hora:pad2(now.getHours())+":"+pad2(now.getMinutes()),obra:ult.obra||"",jefe:ult.jefe||CONFIG.jefeDefault,supervisor:ult.supervisor||"",descripcion:"",
+     trabajos:[],equipos:[],workers:[],ctl:{},epp:false,permisos:{},fotos:[],firmas:{},extra:{}};
+  guardarBorrador();
+}
+function guardarBorrador(){ if(D) LS.set("art_draft",{D,step}); }
+function nomina(){ return CONFIG.nomina.concat(LS.get("art_nomina",[])); }
+function trabajadorPorId(id){ return nomina().find(w=>w.id===id); }
+
+/* aprendizaje simple: lo más usado sale primero; las medidas que se agregan quedan sugeridas */
+function stat(tipo,id){ const s=LS.get("art_stats",{}); return (s[tipo+":"+id]||0); }
+function sumarStats(){ const s=LS.get("art_stats",{}); D.trabajos.forEach(i=>s["t:"+i]=(s["t:"+i]||0)+1); D.equipos.forEach(i=>s["e:"+i]=(s["e:"+i]||0)+1); LS.set("art_stats",s); }
+function ordenado(ids,tipo){ return ids.map((id,i)=>({id,i})).sort((a,b)=>(stat(tipo,b.id)-stat(tipo,a.id))||(a.i-b.i)).map(x=>x.id); }
+function customDe(id){ return LS.get("art_custom",{})[id]||[]; }
+
+function fuentes(){
+  const out=[];
+  D.trabajos.forEach(id=>{const t=TR[id];const ctl=t.ctl.concat(customDe("t_"+id)); if(ctl.length) out.push({k:"t_"+id,n:t.n,ico:t.ico,riesgos:t.riesgos,ctl,epp:t.epp,proc:t.proc,permiso:t.permiso});});
+  D.equipos.forEach(id=>{const e=EQ[id];const ctl=e.ctl.concat(customDe("e_"+id)); if(ctl.length) out.push({k:"e_"+id,n:e.n,ico:id,riesgos:e.riesgos,ctl,epp:e.epp,proc:e.proc||"",permiso:""});});
+  return out;
+}
+function eppLista(){
+  const s=new Set(EPP_BASE); fuentes().forEach(f=>f.epp.forEach(x=>s.add(x)));
+  if(s.has("Casco con barbiquejo")) s.delete("Casco de seguridad");
+  if([...s].some(x=>/^Calzado de seguridad .+/.test(x))) s.delete("Calzado de seguridad");
+  if([...s].some(x=>/guantes de cuero/i.test(x))) s.delete("Guantes de trabajo");
+  return [...s];
+}
+function permisosLista(){ const s=new Set(); D.trabajos.forEach(id=>{const t=TR[id]; if(t.permiso)s.add(t.permiso)}); return [...s]; }
+function procLista(){
+  const s=new Set(); D.trabajos.forEach(id=>{const t=TR[id]; if(t.proc)s.add(t.proc); (t.imp||[]).forEach(i=>{if(TR[i].proc)s.add(TR[i].proc)})}); D.equipos.forEach(id=>{if(EQ[id].proc)s.add(EQ[id].proc)});
+  return [...s].sort();
+}
+function sinProcLista(){ return D.trabajos.filter(id=>TR[id].sinProc).map(id=>TR[id].n); }
+function normN(s){ return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim(); }
+function buscarPersona(nombre){
+  const t=normN(nombre).split(/\s+/).filter(Boolean); if(!t.length) return null;
+  return nomina().concat(Object.values(D.extra)).find(w=>{const n=normN(w.nombre); return t.every(x=>n.includes(x));})||null;
+}
+function personas(){
+  const jm=buscarPersona(D.jefe), sm=buscarPersona(D.supervisor);
+  const p=[{id:"jefe",nombre:jm?jm.nombre:D.jefe,rut:jm?jm.rut:"",rol:"Jefe de cuadrilla",req:true}];
+  D.workers.forEach(id=>{ if(jm&&id===jm.id) return; const w=D.extra[id]||trabajadorPorId(id); if(w) p.push({id,nombre:w.nombre,rut:w.rut,rol:w.cargo||"Trabajador",req:true,fuera:!!D.extra[id]}); });
+  const mismoQueJefe = normN(D.supervisor)===normN(D.jefe) || (sm&&jm&&sm.id===jm.id);
+  const yaTrabajador = sm && D.workers.includes(sm.id);
+  if(D.supervisor && !mismoQueJefe && !yaTrabajador) p.push({id:"sup",nombre:sm?sm.nombre:D.supervisor,rut:sm?sm.rut:"",rol:"Supervisor a cargo",req:false});
+  return p;
+}
+
+/* ---------- Render ---------- */
+function setChrome(){
+  const inicio = step===0, listo = step===9;
+  $("#top").hidden = inicio; $("#prog").hidden = inicio||listo; $("#nav").hidden = inicio||listo;
+  if(!inicio){ $("#tTitle").textContent = listo?"ART listo":"Paso "+step+" de 8 · "+STEPS[step-1]; $("#tSub").textContent = CONFIG.marca; }
+  $("#progBar").style.width = (listo?100:(step/8*100))+"%";
+  $("#bNext").textContent = step===8?"Generar ART":"Siguiente";
+  $("#bBack").style.visibility = step===1?"hidden":"visible";
+}
+function render(keep){
+  const y = keep?window.scrollY:0;
+  setChrome();
+  const v=$("#view");
+  v.innerHTML = [vInicio,v1,v2,v3,v4,v5,v6,v7,v8,vListo][step]();
+  if(step===7) pintarFirmas();
+  window.scrollTo(0,y);
+}
+function go(n){ step=n; guardarBorrador(); render(false); }
+
+function vInicio(){
+  const dr=LS.get("art_draft",null), h=LS.get("art_hist",[]);
+  return `<div class="hero"><img src="logo.png" alt="JGL Construcciones"><h1>Análisis de Riesgos del Trabajo</h1><p>ART digital · ${esc(CONFIG.empresa)}</p></div>
+  ${dr&&dr.D?`<div class="card"><b>ART en curso</b><div style="margin:4px 0 10px;color:var(--mut)">${esc(dr.D.obra||"Sin obra")} · ${esc(dr.D.fecha.split("-").reverse().join("-"))}</div><button class="big" data-act="continuar" type="button">Continuar este ART</button><button class="big w" style="margin-top:8px" data-act="descartar" type="button">Descartar</button></div>`:""}
+  <button class="big d" data-act="nuevo" type="button">Nuevo ART</button>
+  ${h.length?`<h2 style="margin-top:22px">Últimos ART</h2><div class="card">${h.slice(0,10).map(x=>`<div class="hist"><span><b>${esc(x.file)}</b><br><small>${esc(x.obra||"")}</small></span>${x.url?`<a href="${esc(x.url)}" target="_blank" rel="noopener">Ver</a>`:""}</div>`).join("")}</div>`:""}`;
+}
+function v1(){
+  const obras=LS.get("art_obras",[]), sups=LS.get("art_sups",[]);
+  return `<h2>Datos del trabajo</h2><p class="sub">Complete los datos de hoy.</p>
+  <div class="grid row"><div><label class="f">Fecha</label><div class="ro">${esc(D.fecha.split("-").reverse().join("-"))}</div></div><div><label class="f" for="hora">Hora</label><input id="hora" type="time" value="${esc(D.hora)}" data-f="hora"></div></div>
+  <div class="row"><label class="f" for="obra">Obra o lugar de trabajo</label><input id="obra" type="text" value="${esc(D.obra)}" data-f="obra" list="lObras" autocomplete="off"><datalist id="lObras">${obras.map(o=>`<option value="${esc(o)}">`).join("")}</datalist></div>
+  <div class="row"><label class="f" for="jefe">Jefe de cuadrilla</label><input id="jefe" type="text" value="${esc(D.jefe)}" data-f="jefe" autocomplete="off"></div>
+  <div class="row"><label class="f" for="sup">Supervisor a cargo</label><input id="sup" type="text" value="${esc(D.supervisor)}" data-f="supervisor" list="lSups" autocomplete="off"><datalist id="lSups">${sups.map(o=>`<option value="${esc(o)}">`).join("")}</datalist></div>
+  <div class="row"><label class="f" for="desc">¿Qué trabajo van a hacer hoy?</label><textarea id="desc" data-f="descripcion" placeholder="Ejemplo: montaje de costaneras en galpón, sector norte">${esc(D.descripcion)}</textarea></div>`;
+}
+function tarjetaSel(tipo,id,n,ico,on){
+  return `<button type="button" class="sel${on?" on":""}" data-act="${tipo}" data-id="${id}">${svg(ACC[ico])}<span>${esc(n)}</span></button>`;
+}
+function v2(){
+  const ids=ordenado(Object.keys(TR),"t");
+  return `<h2>Tipo de trabajo</h2><p class="sub">Marque todo lo que se va a hacer hoy.</p>
+  <div class="grid" id="gTr">${ids.map(id=>tarjetaSel("tr",id,TR[id].n,TR[id].ico,D.trabajos.includes(id))).join("")}</div>`;
+}
+function v3(){
+  let h=`<h2>Equipos y herramientas</h2><p class="sub">Marque lo que se va a usar.</p>`;
+  GRUPOS.forEach(g=>{
+    const ids=ordenado(Object.keys(EQ).filter(i=>EQ[i].g===g),"e");
+    h+=`<div class="gh"><b>${esc(g)}</b><span><button type="button" class="mini k" data-act="gAll" data-g="${esc(g)}">Todos</button> <button type="button" class="mini" data-act="gNone" data-g="${esc(g)}">Ninguno</button></span></div><div class="grid">${ids.map(id=>tarjetaSel("eq",id,EQ[id].n,id,D.equipos.includes(id))).join("")}</div>`;
+  });
+  return h+`<div id="impNote"></div>`;
+}
+function v4(){
+  const nm=nomina();
+  return `<h2>Trabajadores</h2><p class="sub">Marque quiénes trabajan hoy. Las firmas se piden más adelante.</p>
+  ${nm.length?`<div class="gh"><b>Nómina</b><span><button type="button" class="mini k" data-act="wAll">Todos</button> <button type="button" class="mini" data-act="wNone">Ninguno</button></span></div>`:`<div class="note">La nómina está vacía. Agregue a los trabajadores abajo; quedan guardados en este teléfono para la próxima vez.</div>`}
+  <div id="lW">${nm.map(w=>filaW(w,false)).join("")}${Object.values(D.extra).map(w=>filaW(w,true)).join("")}</div>
+  <div class="card" style="margin-top:14px"><b>Agregar trabajador</b>
+    <div class="row" style="margin-top:8px"><label class="f" for="nN">Nombre completo</label><input id="nN" type="text" autocomplete="off"></div>
+    <div class="row"><label class="f" for="nR">RUT</label><input id="nR" type="text" inputmode="text" autocomplete="off" placeholder="12.345.678-9"></div>
+    <div class="row"><label class="f" for="nC">Cargo (opcional)</label><input id="nC" type="text" autocomplete="off"></div>
+    <div class="pick" id="nG" data-act="guardarNom"><span class="box"></span><span class="nm">Guardar en la nómina de este teléfono</span></div>
+    <div id="nErr"></div>
+    <button type="button" class="big" data-act="addW">Agregar y marcar</button></div>`;
+}
+function filaW(w,fuera){
+  const on=D.workers.includes(w.id);
+  return `<div class="pick${on?" on":""}" data-act="w" data-id="${esc(w.id)}"><span class="box"></span><span class="nm">${esc(w.nombre)}<span class="sm">${esc(w.rut||"")}${w.cargo?" · "+esc(w.cargo):""}${fuera?" · fuera de nómina":""}</span></span></div>`;
+}
+function v5(){
+  const fs=fuentes();
+  let h=`<h2>Riesgos y medidas</h2><p class="sub">Verifique en terreno cada medida y márquela.</p>`;
+  if(!fs.length) h+=`<div class="note">Los trabajos marcados no tienen medidas específicas en los procedimientos de JGL. Confirme el EPP y continúe.</div>`;
+  sinProcLista().forEach(n=>{h+=`<div class="err">${esc(n)}: JGL no tiene un procedimiento de trabajo seguro para este tipo de trabajo. No debe iniciarse sin uno aprobado.</div>`;});
+  const per=permisosLista(), proc=procLista();
+  if(per.length) h+=`<div class="note"><b>Este trabajo requiere permiso:</b></div>`+per.map(p=>`<div class="pick${D.permisos[p]?" on":""}" data-act="perm" data-id="${esc(p)}"><span class="box"></span><span class="nm">${esc(p)}<span class="sm">Firmado por el supervisor y disponible en terreno</span></span></div>`).join("");
+  fs.forEach(f=>{
+    h+=`<section class="src" data-src="${f.k}"><div class="hd">${svg(ACC[f.ico],44)}<b>${esc(f.n)}</b><button type="button" class="mini k" data-act="cAll" data-k="${f.k}">Marcar todo</button></div><div class="bd"><div class="chips">${f.riesgos.map(r=>`<span class="chip g">${esc(r)}</span>`).join("")}</div>`;
+    f.ctl.forEach((c,i)=>{const key=f.k+":"+i;h+=`<div class="ctl${D.ctl[key]?" on":""}" data-act="c" data-key="${esc(key)}"><span class="box"></span><span>${esc(c)}</span></div>`;});
+    h+=`<div class="addrow"><input type="text" id="x_${f.k}" placeholder="Agregar otra medida" autocomplete="off"><button type="button" class="mini k" data-act="addC" data-k="${f.k}">Agregar</button></div></div></section>`;
+  });
+  const epp=eppLista();
+  h+=`<section class="src"><div class="hd"><b>Equipo de protección personal</b></div><div class="bd"><div class="chips">${epp.map(e=>`<span class="chip g">${esc(e)}</span>`).join("")}</div><div class="pick${D.epp?" on":""}" data-act="epp"><span class="box"></span><span class="nm">Todo el personal tiene su EPP completo y en buen estado</span></div></div></section>`;
+  if(proc.length) h+=`<div class="card"><b>Procedimientos aplicables</b><ul style="margin:6px 0 0 18px;padding:0">${proc.map(p=>`<li>${esc(p)}</li>`).join("")}</ul></div>`;
+  return h;
+}
+function v6(){
+  return `<h2>Fotos</h2><p class="sub">Opcional. Tome fotos del lugar de trabajo o elíjalas de la galería (máximo 8).</p>
+  <input type="file" id="fIn" accept="image/*" multiple hidden>
+  <button type="button" class="big" data-act="foto">Tomar o elegir fotos</button>
+  <div class="photos" id="phs" style="margin-top:12px">${D.fotos.map((f,i)=>fotoHTML(f,i)).join("")}</div>`;
+}
+function fotoHTML(f,i){ return `<div class="ph"><img src="${f}" alt="Foto ${i+1}"><button type="button" data-act="delFoto" data-i="${i}" aria-label="Quitar foto">✕</button></div>`; }
+function v7(){
+  return `<h2>Firmas</h2><p class="sub">Toque a cada persona para que firme con el dedo.</p><div id="lS"></div>`;
+}
+function pintarFirmas(){
+  $("#lS").innerHTML = personas().map(p=>{
+    const f=D.firmas[p.id];
+    return `<div class="sg" data-act="firmar" data-id="${esc(p.id)}"><span class="nm">${esc(p.nombre)}<span class="sm">${esc(p.rol)}${p.rut?" · "+esc(p.rut):""}${p.req?"":" · opcional"}</span></span>${f?`<img src="${f}" alt="Firma">`:""}<span class="st ${f?"ok":"no"}">${f?"✓ Firmado":"Firmar"}</span></div>`;
+  }).join("");
+}
+function v8(){
+  const fs=fuentes(), ps=personas();
+  return `<h2>Revisar y generar</h2><p class="sub">Revise y genere el ART. Se guarda en el Drive y queda sellado.</p>
+  <div class="card sum"><dl style="margin:0">
+  <dt>Fecha y hora</dt><dd>${esc(fechaLarga(new Date(D.fecha+"T12:00:00")))} · ${esc(D.hora)}</dd>
+  <dt>Obra</dt><dd>${esc(D.obra)}</dd>
+  <dt>Jefe de cuadrilla / Supervisor</dt><dd>${esc(D.jefe)} / ${esc(D.supervisor)}</dd>
+  <dt>Trabajo</dt><dd>${esc(D.descripcion)}</dd>
+  <dt>Tipos de trabajo</dt><dd>${D.trabajos.map(i=>esc(TR[i].n)).join(", ")}</dd>
+  <dt>Equipos</dt><dd>${D.equipos.length?D.equipos.map(i=>esc(EQ[i].n)).join(", "):"Ninguno"}</dd>
+  <dt>Trabajadores</dt><dd>${ps.filter(p=>p.id!=="jefe"&&p.id!=="sup").map(p=>esc(p.nombre)).join(", ")}</dd>
+  <dt>Medidas verificadas</dt><dd>${fs.reduce((a,f)=>a+f.ctl.length,0)}</dd>
+  <dt>Fotos</dt><dd>${D.fotos.length}</dd></dl></div>`;
+}
+function vListo(){
+  const r=hechoInfo||{};
+  const txt=`Estimados: junto con saludar, se envía el Análisis de Riesgos del Trabajo (ART) de ${CONFIG.empresa}, obra ${D?D.obra:""}, de fecha ${r.fechaCL||""}.${r.url?" Puede revisarlo en: "+r.url:""} Saludos cordiales.`;
+  const mail="mailto:?subject="+encodeURIComponent("ART "+CONFIG.empresa+" "+(r.fechaCL||""))+"&body="+encodeURIComponent(txt);
+  const wa="https://wa.me/?text="+encodeURIComponent(txt);
+  return `<div class="card" style="text-align:center"><div style="font-size:46px">✅</div><h2 style="margin:0">ART sellado</h2><p style="margin:6px 0 0"><b>${esc(r.file||"")}</b></p><p class="sub" style="margin-top:6px">${r.drive?"Guardado en el Drive de la empresa.":"Descargado en este teléfono. Aún no está conectado al Drive."}</p></div>
+  ${r.drive?"":`<div class="note">Sin conexión al Drive: el ART quedó solo en este teléfono. Informe esto a quien administra el sistema.</div>`}
+  <button class="big" data-act="descargar" type="button">Descargar PDF</button>
+  <div class="grid" style="margin-top:8px"><a class="big w" style="text-decoration:none;text-align:center;display:block;padding-top:16px" href="${wa}" target="_blank" rel="noopener">WhatsApp</a><a class="big w" style="text-decoration:none;text-align:center;display:block;padding-top:16px" href="${mail}">Correo</a></div>
+  ${r.url?`<a class="big w" style="text-decoration:none;text-align:center;display:block;margin-top:8px;padding-top:16px" href="${esc(r.url)}" target="_blank" rel="noopener">Ver en Drive</a>`:""}
+  <button class="big d" style="margin-top:8px" data-act="inicio" type="button">Terminar</button>`;
+}
+
+/* ---------- Validación ---------- */
+function faltaCtl(){ let n=0; fuentes().forEach(f=>f.ctl.forEach((c,i)=>{if(!D.ctl[f.k+":"+i])n++})); return n; }
+function validar(n){
+  if(n===1){ if(!D.obra.trim())return "Escriba la obra o lugar de trabajo."; if(!D.jefe.trim())return "Escriba el jefe de cuadrilla."; if(!D.supervisor.trim())return "Escriba el supervisor a cargo."; if(!D.descripcion.trim())return "Escriba qué trabajo van a hacer hoy."; }
+  if(n===2 && !D.trabajos.length) return "Marque al menos un tipo de trabajo.";
+  if(n===4 && !D.workers.length) return "Marque al menos un trabajador.";
+  if(n===5){ const m=faltaCtl(); if(m) return "Faltan "+m+" medidas por verificar. Están marcadas en rojo."; const pe=permisosLista().filter(p=>!D.permisos[p]); if(pe.length) return "Falta confirmar el permiso: "+pe[0]+"."; if(!D.epp) return "Falta confirmar el EPP del personal."; }
+  if(n===7){ const f=personas().filter(p=>p.req&&!D.firmas[p.id]); if(f.length) return "Falta la firma de: "+f.map(p=>p.nombre).join(", ")+"."; }
+  return null;
+}
+function marcarFaltantes(){
+  document.querySelectorAll(".ctl:not(.on)").forEach(e=>e.classList.add("miss"));
+  document.querySelectorAll('.pick[data-act="perm"]:not(.on),.pick[data-act="epp"]:not(.on)').forEach(e=>e.classList.add("miss"));
+  const p=document.querySelector(".miss"); if(p) p.scrollIntoView({block:"center"});
+}
+
+/* ---------- Eventos ---------- */
+document.addEventListener("input",e=>{
+  const f=e.target.getAttribute&&e.target.getAttribute("data-f"); if(!f||!D)return;
+  D[f]=e.target.value; guardarBorrador();
+});
+document.addEventListener("click",e=>{
+  const el=e.target.closest("[data-act]"); if(!el)return;
+  const a=el.dataset.act;
+  if(a==="nuevo"){ nuevoART(); go(1); }
+  else if(a==="continuar"){ const dr=LS.get("art_draft"); D=dr.D; step=Math.min(Math.max(dr.step||1,1),8); render(false); }
+  else if(a==="descartar"){ try{localStorage.removeItem("art_draft")}catch(_){} render(false); }
+  else if(a==="tr"){ const id=el.dataset.id, i=D.trabajos.indexOf(id); if(i<0){D.trabajos.push(id); const nuevos=(TR[id].imp||[]).filter(t=>!D.trabajos.includes(t)); nuevos.forEach(t=>{D.trabajos.push(t); const b=document.querySelector('[data-act="tr"][data-id="'+t+'"]'); if(b)b.classList.add("on");}); if(nuevos.length)toast("Se agregó el tipo de trabajo: "+nuevos.map(t=>TR[t].n).join(", "),3200);} else D.trabajos.splice(i,1); el.classList.toggle("on"); guardarBorrador(); }
+  else if(a==="eq"){ const id=el.dataset.id, i=D.equipos.indexOf(id); if(i<0){D.equipos.push(id); const nuevos=EQ[id].imp.filter(t=>!D.trabajos.includes(t)); nuevos.forEach(t=>D.trabajos.push(t)); if(nuevos.length)toast("Se agregó el tipo de trabajo: "+nuevos.map(t=>TR[t].n).join(", "),3200);} else D.equipos.splice(i,1); el.classList.toggle("on"); guardarBorrador(); }
+  else if(a==="gAll"||a==="gNone"){ const g=el.dataset.g; Object.keys(EQ).filter(i=>EQ[i].g===g).forEach(id=>{const i=D.equipos.indexOf(id); if(a==="gAll"&&i<0){D.equipos.push(id);EQ[id].imp.forEach(t=>{if(!D.trabajos.includes(t))D.trabajos.push(t)})} if(a==="gNone"&&i>=0)D.equipos.splice(i,1); const b=document.querySelector('[data-act="eq"][data-id="'+id+'"]'); if(b)b.classList.toggle("on",D.equipos.includes(id));}); guardarBorrador(); }
+  else if(a==="w"){ const id=el.dataset.id, i=D.workers.indexOf(id); if(i<0)D.workers.push(id); else D.workers.splice(i,1); el.classList.toggle("on"); guardarBorrador(); }
+  else if(a==="wAll"||a==="wNone"){ nomina().forEach(w=>{const i=D.workers.indexOf(w.id); if(a==="wAll"&&i<0)D.workers.push(w.id); if(a==="wNone"&&i>=0)D.workers.splice(i,1);}); document.querySelectorAll('#lW [data-act="w"]').forEach(b=>b.classList.toggle("on",D.workers.includes(b.dataset.id))); guardarBorrador(); }
+  else if(a==="guardarNom"){ el.classList.toggle("on"); }
+  else if(a==="addW") addTrabajador();
+  else if(a==="c"){ const k=el.dataset.key; D.ctl[k]=!D.ctl[k]; el.classList.toggle("on",!!D.ctl[k]); el.classList.remove("miss"); guardarBorrador(); }
+  else if(a==="cAll"){ const k=el.dataset.k, f=fuentes().find(x=>x.k===k); const todos=f.ctl.every((c,i)=>D.ctl[k+":"+i]); f.ctl.forEach((c,i)=>D.ctl[k+":"+i]=!todos); document.querySelectorAll('.src[data-src="'+k+'"] .ctl').forEach(b=>{b.classList.toggle("on",!todos);b.classList.remove("miss")}); guardarBorrador(); }
+  else if(a==="addC"){ const k=el.dataset.k, inp=$("#x_"+k), t=inp.value.trim(); if(!t){inp.focus();return;} const c=LS.get("art_custom",{}); c[k]=(c[k]||[]); if(!c[k].includes(t))c[k].push(t); LS.set("art_custom",c); const f=fuentes().find(x=>x.k===k); const idx=f.ctl.indexOf(t); if(idx>=0)D.ctl[k+":"+idx]=true; guardarBorrador(); render(true); toast("Medida agregada. Quedará sugerida en los próximos ART."); }
+  else if(a==="perm"){ const id=el.dataset.id; D.permisos[id]=!D.permisos[id]; el.classList.toggle("on",!!D.permisos[id]); el.classList.remove("miss"); guardarBorrador(); }
+  else if(a==="epp"){ D.epp=!D.epp; el.classList.toggle("on",D.epp); el.classList.remove("miss"); guardarBorrador(); }
+  else if(a==="foto"){ $("#fIn").click(); }
+  else if(a==="delFoto"){ D.fotos.splice(+el.dataset.i,1); guardarBorrador(); render(true); }
+  else if(a==="firmar") abrirFirma(el.dataset.id);
+  else if(a==="descargar"){ if(hechoInfo&&hechoInfo.blob) descargarBlob(hechoInfo.blob,hechoInfo.file); }
+  else if(a==="inicio"){ try{localStorage.removeItem("art_draft")}catch(_){} D=null; hechoInfo=null; step=0; render(false); }
+});
+document.addEventListener("change",e=>{
+  if(e.target.id==="fIn"){ agregarFotos([...e.target.files]); e.target.value=""; }
+});
+$("#btnHome").addEventListener("click",()=>{ guardarBorrador(); step=0; render(false); });
+$("#bBack").addEventListener("click",()=>{ if(step>1) go(step-1); });
+$("#bNext").addEventListener("click",()=>{
+  const m=validar(step);
+  if(m){ toast(m,3600); if(step===5) marcarFaltantes(); return; }
+  if(step===1){ const o=LS.get("art_obras",[]), s=LS.get("art_sups",[]); if(!o.includes(D.obra.trim()))o.unshift(D.obra.trim()); if(!s.includes(D.supervisor.trim()))s.unshift(D.supervisor.trim()); LS.set("art_obras",o.slice(0,12)); LS.set("art_sups",s.slice(0,12)); LS.set("art_ult",{obra:D.obra.trim(),jefe:D.jefe.trim(),supervisor:D.supervisor.trim()}); }
+  if(step===8){ generar(); return; }
+  go(step+1);
+});
+
+function addTrabajador(){
+  const n=$("#nN").value.trim(), r=$("#nR").value.trim(), c=$("#nC").value.trim(), er=$("#nErr");
+  if(n.length<5){ er.innerHTML='<div class="err">Escriba el nombre completo.</div>'; return; }
+  if(!rutOk(r)){ er.innerHTML='<div class="err">El RUT no es válido. Revise los números y el dígito verificador.</div>'; return; }
+  const rut=rutFmt(r);
+  if(nomina().some(w=>w.rut===rut)||Object.values(D.extra).some(w=>w.rut===rut)){ er.innerHTML='<div class="err">Ese RUT ya está en la lista.</div>'; return; }
+  const w={id:"w"+Date.now(),nombre:n.replace(/\s+/g," "),rut,cargo:c};
+  if($("#nG").classList.contains("on")){ const l=LS.get("art_nomina",[]); l.push(w); LS.set("art_nomina",l); } else { D.extra[w.id]=w; }
+  D.workers.push(w.id); guardarBorrador(); render(true); toast("Trabajador agregado y marcado.");
+}
+
+/* ---------- Fotos ---------- */
+function agregarFotos(files){
+  const libres=8-D.fotos.length; if(libres<=0){ toast("Máximo 8 fotos."); return; }
+  files.slice(0,libres).forEach(file=>{
+    const rd=new FileReader();
+    rd.onload=()=>{ const im=new Image(); im.onload=()=>{ const M=1100, k=Math.min(1,M/Math.max(im.width,im.height)); const c=document.createElement("canvas"); c.width=Math.round(im.width*k); c.height=Math.round(im.height*k); c.getContext("2d").drawImage(im,0,0,c.width,c.height); D.fotos.push(c.toDataURL("image/jpeg",.72)); guardarBorrador(); if(step===6)render(true); }; im.src=rd.result; };
+    rd.readAsDataURL(file);
+  });
+}
+
+/* ---------- Firma ---------- */
+function abrirFirma(id){
+  const p=personas().find(x=>x.id===id), o=$("#ovl");
+  o.innerHTML=`<div class="dlg"><h3>${esc(p.nombre)}</h3><div style="color:var(--mut);margin-bottom:8px">${esc(p.rol)}${p.rut?" · "+esc(p.rut):""} — firme con el dedo</div><canvas class="pad" id="pad"></canvas><div class="acts"><button type="button" id="sB">Borrar</button><button type="button" id="sC">Cancelar</button><button type="button" class="k" id="sG">Guardar</button></div></div>`;
+  o.hidden=false;
+  const cv=$("#pad"), r=cv.getBoundingClientRect(), dpr=window.devicePixelRatio||1; cv.width=r.width*dpr; cv.height=r.height*dpr;
+  const g=cv.getContext("2d"); g.scale(dpr,dpr); g.lineWidth=2.6; g.lineCap="round"; g.lineJoin="round"; g.strokeStyle="#111";
+  let dib=false, tocado=false, lx=0, ly=0;
+  const pos=e=>{const b=cv.getBoundingClientRect();return [e.clientX-b.left,e.clientY-b.top]};
+  cv.addEventListener("pointerdown",e=>{dib=true;[lx,ly]=pos(e);cv.setPointerCapture(e.pointerId);g.beginPath();g.moveTo(lx,ly);g.lineTo(lx+.1,ly+.1);g.stroke();tocado=true;e.preventDefault()});
+  cv.addEventListener("pointermove",e=>{if(!dib)return;const [x,y]=pos(e);g.beginPath();g.moveTo(lx,ly);g.lineTo(x,y);g.stroke();lx=x;ly=y;e.preventDefault()});
+  ["pointerup","pointercancel","pointerleave"].forEach(ev=>cv.addEventListener(ev,()=>dib=false));
+  $("#sB").onclick=()=>{g.clearRect(0,0,cv.width,cv.height);tocado=false};
+  $("#sC").onclick=()=>{o.hidden=true;o.innerHTML=""};
+  $("#sG").onclick=()=>{ if(!tocado){toast("Falta la firma.");return;} D.firmas[id]=recortar(cv); guardarBorrador(); o.hidden=true;o.innerHTML=""; pintarFirmas(); };
+}
+function recortar(cv){
+  const g=cv.getContext("2d"), w=cv.width, h=cv.height, d=g.getImageData(0,0,w,h).data;
+  let x0=w,y0=h,x1=0,y1=0;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){ if(d[(y*w+x)*4+3]>20){ if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y; } }
+  const m=12; x0=Math.max(0,x0-m); y0=Math.max(0,y0-m); x1=Math.min(w,x1+m); y1=Math.min(h,y1+m);
+  const c=document.createElement("canvas"); c.width=Math.max(1,x1-x0); c.height=Math.max(1,y1-y0);
+  c.getContext("2d").drawImage(cv,x0,y0,c.width,c.height,0,0,c.width,c.height);
+  return c.toDataURL("image/png");
+}
+
+/* ---------- PDF ---------- */
+function cargarImg(src){ return new Promise((ok,no)=>{const i=new Image(); i.onload=()=>ok(i); i.onerror=no; i.src=src;}); }
+async function svgPng(acc,px){
+  const s=svg(acc,px); const im=await cargarImg("data:image/svg+xml;charset=utf-8,"+encodeURIComponent(s));
+  const c=document.createElement("canvas"); c.width=px; c.height=px; const g=c.getContext("2d"); g.fillStyle="#fff"; g.fillRect(0,0,px,px); g.drawImage(im,0,0,px,px); return c.toDataURL("image/png");
+}
+async function sha256(txt){ const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(txt)); return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join(""); }
+
+async function construirPDF(folio,hash,selloTxt){
+  const {jsPDF}=window.jspdf, doc=new jsPDF({unit:"mm",format:"letter",compress:true});
+  const W=215.9,H=279.4,M=12,CW=W-2*M, GOLDRGB=[253,178,37], INK=[17,17,17];
+  const logo=await cargarImg("logo.png"), lw=17, lh=lw*logo.naturalHeight/logo.naturalWidth;
+  const fs=fuentes(), ps=personas();
+  const iconos={}; for(const f of fs){ iconos[f.k]=await svgPng(ACC[f.ico],160); }
+  let y=0;
+  const fechaDoc=new Date(D.fecha+"T12:00:00");
+  function cab(){
+    doc.setFillColor(...INK); doc.rect(0,0,W,30,"F"); doc.setFillColor(...GOLDRGB); doc.rect(0,30,W,2.2,"F");
+    doc.addImage(logo,"PNG",M,6,lw*0.0+ (lh>20?lw*20/lh:lw), (lh>20?20:lh));
+    doc.setTextColor(255,255,255); doc.setFont("helvetica","bold"); doc.setFontSize(14);
+    doc.text("ANÁLISIS DE RIESGOS DEL TRABAJO (ART)",M+26,13);
+    doc.setFontSize(9.5); doc.setFont("helvetica","normal");
+    doc.text(CONFIG.empresa+(CONFIG.rut?"  ·  RUT "+CONFIG.rut:""),M+26,19.5);
+    doc.setTextColor(...GOLDRGB); doc.setFont("helvetica","bold"); doc.text(folio,M+26,25.5);
+    doc.setTextColor(255,255,255); doc.setFont("helvetica","normal"); doc.setFontSize(9);
+    doc.text(fechaCL(fechaDoc)+"  ·  "+D.hora+" h",W-M,13,{align:"right"});
+    doc.text(D.obra.length>38?D.obra.slice(0,36)+"…":D.obra,W-M,19.5,{align:"right"});
+    doc.setTextColor(...INK); y=38;
+  }
+  function nuevaPagina(){ doc.addPage(); cab(); }
+  function hay(h){ if(y+h>H-18) nuevaPagina(); }
+  function titulo(t){ hay(14); doc.setFillColor(...GOLDRGB); doc.setDrawColor(...INK); doc.setLineWidth(.4); doc.rect(M,y,CW,6.4,"FD"); doc.setFont("helvetica","bold"); doc.setFontSize(9.5); doc.setTextColor(...INK); doc.text(t.toUpperCase(),M+2,y+4.5); y+=6.4; }
+  function caja(x,yy,w,h,fill){ if(fill){doc.setFillColor(...fill);doc.rect(x,yy,w,h,"FD")} else doc.rect(x,yy,w,h); }
+  function fila(k,v,hmin){ const lines=doc.splitTextToSize(String(v||"-"),CW*0.7-4); const h=Math.max(hmin||7,lines.length*4.2+3); hay(h); doc.setDrawColor(...INK); doc.setLineWidth(.3); caja(M,y,CW*0.3,h,[238,238,238]); caja(M+CW*0.3,y,CW*0.7,h); doc.setFont("helvetica","bold"); doc.setFontSize(8.5); doc.text(k,M+2,y+4.6); doc.setFont("helvetica","normal"); doc.setFontSize(9.5); doc.text(lines,M+CW*0.3+2,y+4.8); y+=h; }
+  function tick(x,yy,on){ doc.setDrawColor(...INK); doc.setLineWidth(.35); doc.rect(x,yy,3.8,3.8); if(on){ doc.setLineWidth(.7); doc.line(x+.7,yy+2.1,x+1.6,yy+3); doc.line(x+1.6,yy+3,x+3.2,yy+.8); } }
+
+  cab();
+  titulo("1. Datos generales");
+  fila("Fecha y hora",fechaLarga(fechaDoc)+", "+D.hora+" h");
+  fila("Empresa",CONFIG.empresa+(CONFIG.rut?"  ·  RUT "+CONFIG.rut:""));
+  fila("Obra o lugar",D.obra);
+  fila("Jefe de cuadrilla",D.jefe);
+  fila("Supervisor a cargo",D.supervisor);
+  fila("Trabajo a realizar",D.descripcion,10);
+  y+=4;
+
+  titulo("2. Tipos de trabajo");
+  { const per=3, cw=CW/per; const lst=D.trabajos; const rows=Math.ceil(lst.length/per);
+    for(let r=0;r<rows;r++){ hay(24); for(let c=0;c<per;c++){ const id=lst[r*per+c]; const x=M+c*cw; doc.setDrawColor(...INK); doc.setLineWidth(.3); doc.rect(x,y,cw,22); if(!id)continue; const im=await svgPng(ACC[TR[id].ico],160); doc.addImage(im,"PNG",x+1.5,y+2,18,18); doc.setFont("helvetica","bold"); doc.setFontSize(8.5); doc.text(doc.splitTextToSize(TR[id].n,cw-24),x+21.5,y+9); }
+      y+=22; } }
+  y+=4;
+
+  titulo("3. Equipos y herramientas");
+  if(!D.equipos.length){ fila("Equipos","Ninguno informado"); }
+  else { const per=4, cw=CW/per; const rows=Math.ceil(D.equipos.length/per);
+    for(let r=0;r<rows;r++){ hay(30); for(let c=0;c<per;c++){ const id=D.equipos[r*per+c]; const x=M+c*cw; doc.setDrawColor(...INK); doc.setLineWidth(.3); doc.rect(x,y,cw,29); if(!id)continue; const im=await svgPng(ACC[id],160); doc.addImage(im,"PNG",x+cw/2-9,y+1.5,18,18); doc.setFont("helvetica","bold"); doc.setFontSize(7.8); doc.text(doc.splitTextToSize(EQ[id].n,cw-4),x+cw/2,y+23,{align:"center"}); }
+      y+=29; } }
+  y+=4;
+
+  titulo("4. Riesgos y medidas de control verificadas");
+  for(const f of fs){
+    const rLines=doc.splitTextToSize("Riesgos: "+f.riesgos.join(" · "),CW-18);
+    const cl=f.ctl.map(c=>doc.splitTextToSize(c,CW-12));
+    const hHead=Math.max(14,rLines.length*4+7);
+    hay(hHead+ (cl[0]?cl[0].length*4.2+3:0));
+    doc.setDrawColor(...INK); doc.setLineWidth(.3); caja(M,y,CW,hHead,[245,245,245]);
+    doc.addImage(iconos[f.k],"PNG",M+1.5,y+1.5,hHead-3>12?12:hHead-3,hHead-3>12?12:hHead-3);
+    doc.setFont("helvetica","bold"); doc.setFontSize(9.5); doc.text(f.n.toUpperCase(),M+16,y+5.2);
+    doc.setFont("helvetica","normal"); doc.setFontSize(8.3); doc.text(rLines,M+16,y+9.6);
+    y+=hHead;
+    for(let i=0;i<cl.length;i++){ const h=cl[i].length*4.2+3; hay(h); doc.setDrawColor(...INK); doc.setLineWidth(.3); doc.rect(M,y,CW,h); tick(M+2,y+(h-3.8)/2,!!D.ctl[f.k+":"+i]); doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.text(cl[i],M+9,y+4.4); y+=h; }
+    y+=3;
+  }
+  y+=1;
+
+  titulo("5. EPP, permisos y procedimientos");
+  { const epp=eppLista(); const per=2, cw=CW/per; const rows=Math.ceil(epp.length/per);
+    for(let r=0;r<rows;r++){ hay(7); for(let c=0;c<per;c++){ const t=epp[r*per+c]; const x=M+c*cw; doc.setDrawColor(...INK); doc.setLineWidth(.3); doc.rect(x,y,cw,7); if(!t)continue; tick(x+2,y+1.6,D.epp); doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.text(t,x+8,y+4.8); } y+=7; }
+    permisosLista().forEach(p=>{ hay(7); doc.setDrawColor(...INK); doc.rect(M,y,CW,7); tick(M+2,y+1.6,!!D.permisos[p]); doc.setFont("helvetica","bold"); doc.setFontSize(9); doc.text(p+" — firmado y disponible en terreno",M+8,y+4.8); y+=7; });
+    const pr=procLista(); if(pr.length) fila("Procedimientos aplicables",pr.join("\n")); const sp=sinProcLista(); if(sp.length) fila("Sin procedimiento",sp.join(", ")+": JGL no tiene un procedimiento de trabajo seguro para este trabajo."); }
+  y+=4;
+
+  hay(Math.min(14+6+19*ps.length,225));
+  titulo("6. Participantes y firmas");
+  { const cols=[8,64,30,CW-8-64-30]; hay(14);
+    doc.setFillColor(238,238,238); doc.setDrawColor(...INK); doc.setLineWidth(.3); let x=M; ["N°","Nombre","RUT","Firma"].forEach((t,i)=>{ doc.rect(x,y,cols[i],6,"FD"); doc.setFont("helvetica","bold"); doc.setFontSize(8.5); doc.text(t,x+2,y+4.2); x+=cols[i]; }); y+=6;
+    let n=1; for(const p of ps){ hay(19); x=M; const vals=[String(n++),p.nombre+"\n"+p.rol,p.rut||"",""]; cols.forEach((w,i)=>{ doc.rect(x,y,w,19); x+=w; });
+      doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.text(vals[0],M+2,y+6);
+      doc.setFont("helvetica","bold"); doc.text(doc.splitTextToSize(p.nombre,cols[1]-4),M+cols[0]+2,y+6); doc.setFont("helvetica","normal"); doc.setFontSize(8); doc.text(p.rol+(p.fuera?" (fuera de nómina)":""),M+cols[0]+2,y+16);
+      doc.setFontSize(9); doc.text(vals[2],M+cols[0]+cols[1]+2,y+6);
+      const f=D.firmas[p.id]; if(f){ const im=await cargarImg(f); const bw=cols[3]-6, bh=15; let w=bw, h=bw*im.height/im.width; if(h>bh){h=bh;w=bh*im.width/im.height;} doc.addImage(f,"PNG",M+cols[0]+cols[1]+cols[2]+3,y+2+(bh-h)/2,w,h); }
+      y+=19; } }
+  y+=4;
+
+  if(D.fotos.length){
+    titulo("7. Registro fotográfico");
+    const per=3, gap=3, cw=(CW-gap*(per-1))/per; let col=0, rowH=0;
+    for(let i=0;i<D.fotos.length;i++){ const im=await cargarImg(D.fotos[i]); const h=Math.min(cw*0.8,cw*im.height/im.width), w=h===cw*0.8?Math.min(cw,h*im.width/im.height):cw;
+      if(col===0){ hay(cw*0.8+9); rowH=cw*0.8+6; }
+      const x=M+col*(cw+gap); doc.setDrawColor(...INK); doc.setLineWidth(.3); doc.rect(x,y,cw,cw*0.8); doc.addImage(D.fotos[i],"JPEG",x+(cw-w)/2,y+(cw*0.8-h)/2,w,h); doc.setFont("helvetica","normal"); doc.setFontSize(7.5); doc.text("Foto "+(i+1),x,y+cw*0.8+3.5);
+      col++; if(col===per){ col=0; y+=rowH; } }
+    if(col!==0) y+=rowH; y+=3;
+  }
+
+  hay(46); y+=2;
+  doc.setDrawColor(...INK); doc.setLineWidth(.6); doc.rect(M,y,CW,36); doc.setFillColor(...GOLDRGB); doc.rect(M,y,CW,6.4,"FD");
+  doc.setFont("helvetica","bold"); doc.setFontSize(9.5); doc.text("SELLO DE VERIFICACIÓN",M+2,y+4.5);
+  const cx=M+19, cy=y+21; doc.setLineWidth(.9); doc.circle(cx,cy,13.5); doc.setLineWidth(.35); doc.circle(cx,cy,11.6); doc.setFillColor(...GOLDRGB); doc.circle(cx,cy,9.6,"F");
+  doc.setFontSize(15); doc.text("ART",cx,cy+1.2,{align:"center"}); doc.setFontSize(6); doc.text("SELLADO",cx,cy+5.4,{align:"center"}); doc.setFontSize(5.8); doc.text(fechaCL(fechaDoc),cx,cy+8.2,{align:"center"});
+  doc.setFont("helvetica","bold"); doc.setFontSize(8.5); doc.text("Folio: "+folio,M+38,y+12);
+  doc.setFont("helvetica","normal"); doc.text("Sellado el "+selloTxt,M+38,y+17);
+  doc.text("Código de integridad de los datos (SHA-256):",M+38,y+22.5);
+  doc.setFont("courier","normal"); doc.setFontSize(8); doc.text([hash.slice(0,32),hash.slice(32)],M+38,y+27);
+  doc.setFont("helvetica","italic"); doc.setFontSize(6.8); doc.text("Este código identifica el contenido registrado en terreno. Si el contenido cambia, el código deja de coincidir.",M+38,y+33.2,{maxWidth:CW-42});
+
+  const n=doc.getNumberOfPages();
+  for(let p=1;p<=n;p++){ doc.setPage(p); doc.setDrawColor(...INK); doc.setLineWidth(.3); doc.line(M,H-12,W-M,H-12); doc.setFont("helvetica","normal"); doc.setFontSize(7.5); doc.setTextColor(90,90,90); doc.text(CONFIG.credito,M,H-8); doc.text(folio,W/2,H-8,{align:"center"}); doc.text("Página "+p+" de "+n,W-M,H-8,{align:"right"}); doc.setTextColor(...INK); }
+  doc.setProperties({title:folio+" "+CONFIG.empresa,subject:"Análisis de Riesgos del Trabajo",author:CONFIG.credito});
+  return doc;
+}
+
+function descargarBlob(blob,name){ const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500); }
+function aB64(blob){ return new Promise(ok=>{const r=new FileReader(); r.onload=()=>ok(String(r.result).split(",")[1]); r.readAsDataURL(blob);}); }
+
+async function generar(){
+  const o=$("#ovl"); o.innerHTML=`<div class="dlg" style="text-align:center"><div class="spin"></div><b>Generando el ART…</b><div style="color:var(--mut);margin-top:4px">No cierre esta pantalla.</div></div>`; o.hidden=false;
+  try{
+    const ahora=new Date(), fcl=fechaCL(new Date(D.fecha+"T12:00:00"));
+    const cont=LS.get("art_folios",{}); const n=(cont[D.fecha]||0)+1;
+    let nombre="ART "+fcl+" "+pad2(n), folio=nombre;
+    const selloTxt=fechaCL(ahora)+" a las "+pad2(ahora.getHours())+":"+pad2(ahora.getMinutes())+" h";
+    const hash=await sha256(JSON.stringify({d:D,folio,selloTxt}));
+    const doc=await construirPDF(folio,hash,selloTxt);
+    const blob=doc.output("blob");
+    let url="", drive=false, archivo=nombre+".pdf";
+    if(CONFIG.endpoint){
+      try{
+        const res=await fetch(CONFIG.endpoint,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({token:CONFIG.token,fecha:D.fecha,nombre:archivo,pdf:await aB64(blob)})});
+        const j=await res.json();
+        if(j&&j.ok){ drive=true; url=j.url||""; archivo=j.nombre||archivo; }
+      }catch(e){}
+    }
+    cont[D.fecha]=n; LS.set("art_folios",cont);
+    sumarStats();
+    const h=LS.get("art_hist",[]); h.unshift({file:archivo,obra:D.obra,url,fecha:D.fecha}); LS.set("art_hist",h.slice(0,30));
+    if(!drive) descargarBlob(blob,archivo);
+    hechoInfo={file:archivo,url,drive,blob,fechaCL:fcl};
+    try{localStorage.removeItem("art_draft")}catch(_){}
+    o.hidden=true; o.innerHTML=""; go(9);
+  }catch(e){
+    o.innerHTML=`<div class="dlg"><h3>No se pudo generar</h3><p>Ocurrió un problema al armar el PDF. Sus datos siguen guardados en este teléfono. Intente de nuevo.</p><div class="acts"><button type="button" class="k" id="eOk">Entendido</button></div></div>`; $("#eOk").onclick=()=>{o.hidden=true;o.innerHTML=""};
+    console.error(e&&e.target&&e.target.src?('Imagen que no carga: '+String(e.target.src).slice(0,90)):(e&&e.stack?e.stack:e));
+  }
+}
+
+/* ---------- Inicio ---------- */
+(function(){ const dr=LS.get("art_draft",null); D=dr&&dr.D?dr.D:null; step=0; render(false); })();
+</script>
+</body>
+</html>
